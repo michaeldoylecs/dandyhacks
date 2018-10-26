@@ -1,2 +1,2 @@
-# dandyhack
+# DandyHacks
 Repo for DandyHack Project
