@@ -7,7 +7,6 @@
 const app = require('../app');
 const debug = require('debug')('dandyhacks:server');
 const http = require('http');
-const assert = require('assert');
 const CryptoJS = require('crypto-js')
 
 /**
@@ -47,31 +46,34 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
  */
 
 const io = require('socket.io')(server);
+const Message = require('../src/message');
 const MessageQueue = require('../src/messageQueue.js');
+
 
 const messageQueue = new MessageQueue();
 
 io.on('connection', (socket) => {
   // Client sends a message
   socket.on('send_message', (message, sender, recipient) => {
-    const cyphertext = CryptoJS.AES.encrypt(message, 'my key');
-    const bytes = CryptoJS.AES.decrypt(cyphertext.toString(), 'my key');
-    const plaintext = bytes.toString(CryptoJS.enc.Utf8);
+    // const cyphertext = CryptoJS.AES.encrypt(message, 'my key');
+    // const bytes = CryptoJS.AES.decrypt(cyphertext.toString(), 'my key');
+    // const plaintext = bytes.toString(CryptoJS.enc.Utf8);
     messageQueue.addMessage(message, sender, recipient);
-    console.log(`${sender} sent '${cyphertext}' to ${recipient}`);
-    console.log(`The message decrypts to ${plaintext}`);
+    io.emit('respond_with_message', new Message(message, sender, sender));
+    console.log(`'${sender}' sent '${message}' to '${recipient}'`);
+    console.log(messageQueue.getAllMessages(recipient));
   });
 
   // Client requests all messages
   socket.on('request_all_message', (user) => {
-    const messages = messageQueue.getAllMessages(user);
-    socket.emit('send_message_array', messages);
+    const messages = messageQueue.popAllMessages(user);
+    socket.emit('respond_with_message_array', messages);
   });
 
   // Client requests their next message
   socket.on('request_message', (user) => {
-    const message = messageQueue.getMessage(user);
-    socket.emit('send_message', message);
+    const message = messageQueue.popMessage(user);
+    socket.emit('respond_with_message', message);
   });
 });
 

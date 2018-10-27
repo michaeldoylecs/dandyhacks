@@ -1,4 +1,4 @@
-var io = io()
+// Socket Communication
 
 var input = document.getElementById("input")
 input.addEventListener("keypress", function(e) {
@@ -31,3 +31,13 @@ function toLog(text) {
     textQueue.push(li)
     usrMsgL+=1
 }
+
+io.on('respond_with_message', function(message) {
+    if (message != null) {
+      logMsg(message.txt)
+    }
+  })
+  
+  var requestMessageConstantly = setInterval(function() {
+    io.emit('request_message', 'Sender')
+  }, 1000);

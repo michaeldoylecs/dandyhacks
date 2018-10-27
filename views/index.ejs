@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <title><%= title %></title>
+    <title>DaddyChat</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='icon' type="image/png" href="/res/tex.png" />
@@ -10,10 +9,12 @@
 
   <body>
 
+<!--<div class="flexbox-cell" id="flex-header">
     <div id="header">
-      <h1><%= title %></h1>
-      <p>Welcome to <%= title %></p>
+      <h1>DaddyChat</h1>
+      <p>By Bryce Murphy &amp; Michael Doyle</p>
     </div>
+  </div>
     
     <div id="meat">
 
@@ -32,12 +33,33 @@
           <input type="text" id="input" placeholder="say something, theshmurph...">
         </div>
       </div>
-
+    -->
+    <div class="flexbox-container">
+      
+      <div class="flexbox-cell" id="flex-header">
+        <div id="header">
+          <h1>DaddyChat</h1>
+          <p>By Bryce Murphy &amp; Michael Doyle</p>
+        </div>
+      </div>
+     
+      <div class="flexbox-cell" id="flex-log">
+        <div id="log">
+          <ul id="log_e"></ul>
+        </div>
+      </div>
+      
+      <div class="flexbox-cell" id="flex-input">
+        <div id="user_text">
+          <input type="text" id="input">
+        </div>
+      </div>
+    
+>>>>>>> master
     </div>
-
   </body>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/sendToServer.js"></script>
-
+  <script src="/js/toLog.js"></script>
 </html>
