@@ -47,9 +47,9 @@ MongoClient.connect(dbUrl, { useNewUrlParser: true }, (err, client) => {
 const io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
-  
-  socket.on('message', (message) => {
-    console.log(message);
+
+  socket.on('send_message', (message, sender, recipient) => {
+    console.log(`${sender} sent '${message}' to ${recipient}`);
   });
 
 });
