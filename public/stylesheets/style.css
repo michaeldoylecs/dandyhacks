@@ -20,28 +20,41 @@ ol {
 }
 #header {
   text-align: center;
-  margin-bottom: 10%;
 }
 #meat {
   font-size: 2em;
+}
+#username {
+  height: 40px;
+}
+#current {
+  color: #d30000;
+  text-align: center;
 }
 #FLIPBOX {
   transform: rotate(180deg)
 }
 #log {
   background-color: white;
-  height: 700px;
+  height: 625px;
 }
 #user_text {
   position: fixed;
   bottom: 50px;
   width: 50%;
 }
-#input:hover {
-  background-color: #f7f7f7;
-}
 #input {
+  border: none;
   box-sizing: border-box;
   height: 70px;
   font-size: 1em;
+}
+#input:hover {
+  background-color: #f9f9f9;
+}
+input::placeholder {
+  color: #00b7ff;
+}
+#input:hover::placeholder {
+  color: #d30000;
 }
