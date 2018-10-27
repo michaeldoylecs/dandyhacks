@@ -13,7 +13,6 @@ if (getUser() != "") {
     displayName(getUser())
 }
 
-
 function displayName(user) {
     // sets variables
     var inputField
@@ -140,5 +139,5 @@ function setUser(name) {
 function getUser() {
     var decodedCookie = decodeURIComponent(document.cookie)
     var ca = decodedCookie.split(';')
-    return ca[1]
+    return ca
 }
