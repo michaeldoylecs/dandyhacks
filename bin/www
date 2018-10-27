@@ -27,8 +27,8 @@ const server = http.createServer(app);
  */
 
 const socket = require('socket.io')(server);
-socket.on('connect' () => {
-  console.log('Client Connected!')
+socket.on('connect', () => {
+  console.log('Client Connected!');
 })
 
 /**
