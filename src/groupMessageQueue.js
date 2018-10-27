@@ -14,9 +14,7 @@ class MessageQueue {
   addMessage(text, sender) {
     const message = new Message(text, sender);
     Object.keys(this.users).forEach((key) => {
-      if (key !== sender) {
-        this.users[key].push(message);
-      }
+      this.users[key].push(message);
     });
   }
 

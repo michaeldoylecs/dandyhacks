@@ -59,10 +59,10 @@ io.on('connection', (socket) => {
     console.log(`Added '${user}' to groupMessageQueue.`);
   });
 
-  socket.on('send_group_message', (message, sender) => {
-    groupMessageQueue.addMessage(message, sender);
-    socket.emit('confirm_group_message', new Message(message, sender));
-    console.log(`Added '${message}' from '${sender}' to groupMessageQueue`);
+  socket.on('send_group_message', (text, sender) => {
+    const message = new Message(text, sender);
+    io.emit('new_group_message', (message));
+    console.log(`'${sender}' sent '${text}'`);
   });
 
   socket.on('request_group_message', (user) => {
