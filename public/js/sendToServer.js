@@ -8,6 +8,29 @@ var usernameVal = document.getElementById("username")
 var name = "anonymous"
 
 // checks for username
+console.log(getUser())
+if (getUser() != "") {
+    displayName(getUser())
+}
+
+
+function displayName(user) {
+    // sets variables
+    var inputField
+    var userHead;
+    var userTextNode;
+
+    // variable assignment
+    inputField = usernameVal.parentElement
+    userTextNode = document.createTextNode(user)
+    userHead = document.createElement("h2")
+    document.getElementById("input").placeholder += ("," + getUser() + "...")
+
+    // adding text and removing input
+    userHead.appendChild(userTextNode)
+    inputField.appendChild(userHead)
+    inputField.removeChild(usernameVal)
+}
 
 // event listener for any keypress on username value
 usernameVal.addEventListener("keypress", function(e) {
@@ -19,23 +42,8 @@ usernameVal.addEventListener("keypress", function(e) {
 
         // if the usernae is not blank
         if (formatted != "") {
-            // sets variables
-            var inputField
-            var userHead;
-            var userTextNode;
-
-            // variable assignment
-            name = formatted
-            setUser(name)
-            inputField = usernameVal.parentElement
-            userTextNode = document.createTextNode(name)
-            userHead = document.createElement("h2")
-            document.getElementById("input").placeholder += (", " + name + "...")
-
-            // adding text and removing input
-            userHead.appendChild(userTextNode)
-            inputField.appendChild(userHead)
-            inputField.removeChild(usernameVal)
+            setUser(formatted)
+            displayName(formatted)
         }
     }
 })
@@ -81,7 +89,7 @@ function toLog(text) {
     } 
 
     // appends to message to the created list element
-    li.appendChild(document.createTextNode("(" + name + ") " + text))
+    li.appendChild(document.createTextNode("(" + getUser() + ") " + text))
     // appends list element to log element
     ol.appendChild(li)
     // pushes message onto the queue
@@ -93,20 +101,10 @@ function setUser(name) {
     document.cookie = name
 }
 
-function getUser(name) {
-    var uname = name + "="
+function getUser() {
     var decodedCookie = decodeURIComponent(document.cookie)
     var ca = decodedCookie.split(';')
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i]
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1)
-        }
-        if (c.indexOf(uname) == 0) {
-            return c.substring(uname.length, c.length)
-        }
-    }
-    return ""
+    return ca[1]
 }
 
 // sends message from server to log
