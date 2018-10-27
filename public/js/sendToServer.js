@@ -24,7 +24,7 @@ function displayName(user) {
     inputField = usernameVal.parentElement
     userTextNode = document.createTextNode(user)
     userHead = document.createElement("h2")
-    document.getElementById("input").placeholder += ("," + getUser() + "...")
+    document.getElementById("input").placeholder += (", " + getUser() + "...")
 
     // adding text and removing input
     userHead.appendChild(userTextNode)
@@ -103,8 +103,10 @@ function setUser(name) {
 
 function getUser() {
     var decodedCookie = decodeURIComponent(document.cookie)
+    console.log(decodedCookie)
     var ca = decodedCookie.split(';')
-    return ca[1]
+    console.log(ca)
+    return ca
 }
 
 // sends message from server to log
