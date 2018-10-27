@@ -2,13 +2,32 @@ var io = io()
 
 var input = document.getElementById("input")
 input.addEventListener("keypress", function(e) {
+    var str = String(input.value).trim()
     if (e.key == "Enter") {
-        logMsg(input.value)
-        io.emit('send_message', input.value, "Sender", "Recipient")
-        input.value = ""
+        if (str != "") {
+            toLog(input)
+            io.emit('send_message', str, "Sender", "Recipient")
+            input.value = ""
+        }
     }
 })
 
-function logMsg(input) {
-    sendToLog(input)
+var usrMsgL = 0;
+var first = true;
+var textQueue = []
+function toLog(text) {
+    var ol = document.getElementById("log_e")
+    var li = document.createElement("li")
+    if (usrMsgL >= 18) {
+        if (first) {
+            first = false
+        } else {
+            var lm = textQueue.shift()
+            ol.removeChild(lm)
+        }
+    } 
+    li.appendChild(document.createTextNode("you: " + String(text.value).trim()))
+    ol.appendChild(li)
+    textQueue.push(li)
+    usrMsgL+=1
 }

@@ -1,8 +1,8 @@
 class Message {
-  constructor(message, sender, target) {
-    this.message = message;
+  constructor(text, sender, recipient) {
+    this.text = text;
     this.sender = sender;
-    this.target = target;
+    this.recipient = recipient;
   }
 }
 
