@@ -8,31 +8,37 @@
   </head>
 
   <body>
+
     <div class="flexbox-container">
       
       <div class="flexbox-cell" id="flex-header">
         <div id="header">
           <h1>DaddyChat</h1>
-          <p>By Bryce Murphy &amp; Michael Doyle</p>
+          <p>By <a href="https://github.com/theshmurph" id="bryce">Bryce Murphy</a>
+           &amp;  <a href="https://github.com/michaeldoylecs" id="mike">Michael Doyle</a></p>
         </div>
       </div>
-     
+
+      <div class="flexbox-cell" id="flex-login">
+        <input type="text" id="username" placeholder="input username">
+      </div>
+    
       <div class="flexbox-cell" id="flex-log">
         <div id="log">
-          <ul id="log_e"></ul>
+          <ol id="log_e"></ul>
         </div>
       </div>
       
       <div class="flexbox-cell" id="flex-input">
         <div id="user_text">
-          <input type="text" id="input">
+          <input type="text" id="input" placeholder="say something">
         </div>
       </div>
     
     </div>
+
   </body>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/sendToServer.js"></script>
-  <script src="/js/toLog.js"></script>
 </html>
