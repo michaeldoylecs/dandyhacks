@@ -84,7 +84,7 @@ function toLog(user, text) {
     } 
 
     // appends to message to the created list element
-    li.appendChild(document.createTextNode("(" + getUser() + ") " + text))
+    li.appendChild(document.createTextNode("(" + user + ") " + text))
     // appends list element to log element
     ol.appendChild(li)
     // pushes message onto the queue
