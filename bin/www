@@ -7,6 +7,7 @@
 const app = require('../app');
 const debug = require('debug')('dandyhacks:server');
 const http = require('http');
+const assert = require('assert');
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +21,24 @@ app.set('port', port);
  */
 
 const server = http.createServer(app);
+
+/**
+ * MongoDB setup
+ */
+
+const { MongoClient } = require('mongodb');
+const dbUrl = 'mongodb://testing.michaeldoylecs.com:27017'
+const dbName = 'daddyhack'
+
+MongoClient.connect(dbUrl, { useNewUrlParser: true }, (err, client) => {
+  assert.equal(null, err);
+  
+  console.log('Connected successfully to remote MongoDB server');
+
+  const db = client.db(dbName);
+
+  client.close();
+});
 
 /**
  * Create Socket.io Server
