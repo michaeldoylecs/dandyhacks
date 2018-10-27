@@ -58,8 +58,7 @@ io.on('connection', (socket) => {
     const bytes = CryptoJS.AES.decrypt(cyphertext.toString(), 'my key');
     const plaintext = bytes.toString(CryptoJS.enc.Utf8);
     messageQueue.addMessage(message, sender, recipient);
-    console.log(`${sender} sent '${cyphertext}' to ${recipient}`);
-    console.log(`The message decrypts to ${plaintext}`);
+    console.log(`'${sender}' sent '${plaintext}' to '${recipient}'`);
   });
 
   // Client requests all messages
