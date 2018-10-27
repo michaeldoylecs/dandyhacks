@@ -1,0 +1,25 @@
+{
+  "name": "dandyhacks-server",
+  "version": "1.0.0",
+  "description": "Our server for dandyhacks",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaeldoylecs/dandyhacks.git"
+  },
+  "keywords": [
+    "dandyhacks"
+  ],
+  "author": "Michael Doyle",
+  "contributers": [
+    "Bryce Murphy"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/michaeldoylecs/dandyhacks/issues"
+  },
+  "homepage": "https://github.com/michaeldoylecs/dandyhacks#readme"
+}
