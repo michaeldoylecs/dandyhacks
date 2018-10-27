@@ -9,22 +9,29 @@
   </head>
 
   <body>
+
     <div id="header">
       <h1><%= title %></h1>
       <p>Welcome to <%= title %></p>
     </div>
     
-    <div id="log">
-      <ul id="log_e"></ul>
-    </div>
-    <div id="user_text">
-      <input type="text" id="input">
+    <div id="meat">
+
+      <div id="FLIPBOX">  
+        <div id="log">
+          <ol id="log_e"></ul>
+        </div>
+      </div>
+
+      <div id="user_text">
+        <input type="text" id="input">
+      </div>
+
     </div>
 
   </body>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/sendToServer.js"></script>
-  <script src="/js/toLog.js"></script>
 
 </html>
