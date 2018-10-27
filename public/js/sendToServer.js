@@ -22,7 +22,7 @@ function displayName(user) {
     inputField = usernameVal.parentElement
     userTextNode = document.createTextNode(user)
     userHead = document.createElement("h2")
-    document.getElementById("input").placeholder += ("," + getUser() + "...")
+    document.getElementById("input").placeholder += (", " + getUser() + "...")
 
     // adding text and removing input
     userHead.appendChild(userTextNode)
