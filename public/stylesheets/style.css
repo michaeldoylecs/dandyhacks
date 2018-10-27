@@ -1,3 +1,6 @@
+html {
+  height: 100%;
+}
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #3794f2;
@@ -22,7 +25,13 @@ ol {
   text-align: center;
 }
 #meat {
-  font-size: 2em;
+  font-size: 2em;  
+}
+#input_and_log {
+  position: fixed;
+  bottom: 10px;
+  width: 50%;
+  overflow: hidden;
 }
 #username {
   height: 40px;
@@ -32,16 +41,12 @@ ol {
   text-align: center;
 }
 #FLIPBOX {
-  transform: rotate(180deg)
-}
-#log {
-  background-color: white;
-  height: 625px;
+  transform: rotate(180deg);
+  background-color: #d30000;
+  max-height: inherit;
 }
 #user_text {
-  position: fixed;
-  bottom: 50px;
-  width: 50%;
+  margin-top: 10px;
 }
 #input {
   border: none;
