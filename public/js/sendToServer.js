@@ -17,6 +17,7 @@ usernameVal.addEventListener("keypress", function(e) {
             userHead.appendChild(userTextNode)
             box.appendChild(userHead)
             box.removeChild(usernameVal)
+            io.emit('add_user', name)
         }
     }
 })
@@ -26,7 +27,7 @@ input.addEventListener("keypress", function(e) {
     var str = String(input.value).trim()
     if (e.key == "Enter") {
         if (str != "") {
-            io.emit('send_message', str, "Sender", "Recipient")
+            io.emit('send_group_message', str, name)
             input.value = ""
         }
     }
@@ -35,7 +36,7 @@ input.addEventListener("keypress", function(e) {
 var usrMsgL = 0;
 var first = true;
 var textQueue = []
-function toLog(text) {
+function toLog(user, text) {
     var ol = document.getElementById("log_e")
     var li = document.createElement("li")
     if (usrMsgL >= 200) {
@@ -46,20 +47,40 @@ function toLog(text) {
             ol.removeChild(lm)
         }
     } 
-    li.appendChild(document.createTextNode("you: " + text))
+    li.appendChild(document.createTextNode(user + ": " + text))
     ol.appendChild(li)
     textQueue.push(li)
     usrMsgL+=1
 }
 
-
-
-io.on('respond_with_message', function(message) {
+io.on('confirm_group_message', function(message) {
     if (message != null) {
-      toLog(message.text)
+      toLog("You", message.text)
     }
-  })
-  
-  var requestMessageConstantly = setInterval(function() {
-    io.emit('request_message', 'Sender')
-  }, 1000);
+})
+
+io.on('confirm_sent_message', function(message) {
+    if (message != null) {
+      toLog("You", message.text)
+    }
+})
+
+var requestGroupMessageConstantly = setInterval(function() {
+  io.emit('request_group_message', name)
+}, 1000);
+
+io.on('respond_with_group_message', (message) => {
+  if (message != null) {
+    toLog(message.sender, message.text)
+  }
+})
+ 
+var requestMessageConstantly = setInterval(function() {
+  io.emit('request_message', name)
+}, 1000);
+
+io.on('respond_with_message', (message) => {
+  if (message != null) {
+    toLog(message.sender, message.text)
+  }
+})
