@@ -7,7 +7,6 @@
 const app = require('../app');
 const debug = require('debug')('dandyhacks:server');
 const http = require('http');
-const os = require('os')
 
 /**
  * Get port from environment and store in Express.
@@ -26,10 +25,11 @@ const server = http.createServer(app);
  * Create Socket.io Server
  */
 
-const socket = require('socket.io')(server);
-socket.on('connect', () => {
-  console.log('Client Connected!')
-})
+const io = require('socket.io')(server);
+
+io.on('connection', () => {
+  console.log('Client Connected!');
+});
 
 /**
  * Listen on provided port, on all network interfaces.
