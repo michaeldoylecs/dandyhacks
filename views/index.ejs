@@ -9,11 +9,15 @@
   </head>
 
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <div id="header">
+      <h1><%= title %></h1>
+      <p>Welcome to <%= title %></p>
+    </div>
     
+    <div id="log">
+      <ul id="log_e"></ul>
+    </div>
     <div id="user_text">
-      <input type="text" id="log">
       <input type="text" id="input">
     </div>
 
@@ -21,5 +25,6 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/sendToServer.js"></script>
+  <script src="/js/toLog.js"></script>
 
 </html>
