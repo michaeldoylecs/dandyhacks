@@ -46,7 +46,9 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
  */
 
 const io = require('socket.io')(server);
+const Message = require('../src/message');
 const MessageQueue = require('../src/messageQueue.js');
+
 
 const messageQueue = new MessageQueue();
 
@@ -57,6 +59,7 @@ io.on('connection', (socket) => {
     // const bytes = CryptoJS.AES.decrypt(cyphertext.toString(), 'my key');
     // const plaintext = bytes.toString(CryptoJS.enc.Utf8);
     messageQueue.addMessage(message, sender, recipient);
+    io.emit('respond_with_message', new Message(message, sender, sender));
     console.log(`'${sender}' sent '${message}' to '${recipient}'`);
     console.log(messageQueue.getAllMessages(recipient));
   });
@@ -64,13 +67,13 @@ io.on('connection', (socket) => {
   // Client requests all messages
   socket.on('request_all_message', (user) => {
     const messages = messageQueue.popAllMessages(user);
-    socket.emit('send_message_array', messages);
+    socket.emit('respond_with_message_array', messages);
   });
 
   // Client requests their next message
   socket.on('request_message', (user) => {
     const message = messageQueue.popMessage(user);
-    socket.emit('send_message', message);
+    socket.emit('respond_with_message', message);
   });
 });
 

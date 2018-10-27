@@ -1,13 +1,42 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+html, body, .flexbox-container {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #3794f2;
   margin: auto;
-  width: 50%;
+  width: 60%;
 }
 a {
   color: #00B7FF;
 }
+.flexbox-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.flexbox-cell {
+  flex: 1 1 auto;
+}
+#flex-header {
+  flex: 1;
+}
+#flex-log {
+  flex: 5;
+  overflow-y: hidden;
+}
+#flex-input {
+  flex: 1;
+}
 input {
+  margin: auto;
   width: 100%;
 }
 ul {
@@ -15,6 +44,7 @@ ul {
   flex-direction: column-reverse;
   vertical-align: 0;
   list-style-type: none;
+  overflow-y: auto;
 }
 #header {
   text-align: center;
@@ -22,12 +52,10 @@ ul {
 }
 #log {
   background-color: white;
-  height: 700px;
+  height: 100%;
 }
 #user_text {
-  position: fixed;
-  bottom: 40px;
-  width: 50%;
+  margin: auto;
 }
 #input:hover {
   background-color: #f7f7f7;

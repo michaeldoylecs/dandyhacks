@@ -14,33 +14,33 @@ class MessageQueue {
   }
 
   getMessageCount(user) {
-    if (this.userQueues[user] == null) { return 'NONE'; }
+    if (this.userQueues[user] == null) { return null; }
     return this.userQueues[user].length;
   }
 
   popMessage(user) {
-    if (this.userQueues[user] == null) { return 'NONE'; }
-    if (this.userQueues[user].length === 0) { return 'NONE'; }
+    if (this.userQueues[user] == null) { return null; }
+    if (this.userQueues[user].length === 0) { return null; }
     return this.userQueues[user].shift();
   }
 
   popAllMessages(user) {
-    if (this.userQueues[user] == null) { return 'NONE'; }
-    if (this.userQueues[user].length === 0) { return 'NONE'; }
+    if (this.userQueues[user] == null) { return null; }
+    if (this.userQueues[user].length === 0) { return null; }
     const messages = this.userQueues[user];
     this.userQueues[user] = [];
     return messages;
   }
 
   getMessage(user) {
-    if (this.userQueues[user] == null) { return 'NONE'; }
-    if (this.userQueues[user].length === 0) { return 'NONE'; }
+    if (this.userQueues[user] == null) { return null; }
+    if (this.userQueues[user].length === 0) { return null; }
     return this.userQueues[user][0];
   }
 
   getAllMessages(user) {
-    if (this.userQueues[user] == null) { return 'NONE'; }
-    if (this.userQueues[user].length === 0) { return 'NONE'; }
+    if (this.userQueues[user] == null) { return null; }
+    if (this.userQueues[user].length === 0) { return null; }
     return this.userQueues[user];
   }
 }
