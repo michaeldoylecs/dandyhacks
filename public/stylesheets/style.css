@@ -15,11 +15,17 @@ body {
 }
 a {
   text-decoration: none;
-  color: #00B7FF;
+}
+a:hover {
+  transition: .5s;
 }
 input {
+  outline: none;
   margin: auto;
   width: 100%;
+}
+input:focus::-webkit-input-placeholder {
+  opacity: 0;
 }
 ol {
   padding: 0;
@@ -49,9 +55,13 @@ ol {
   color: #d30000;
   text-align: center;
 }
+#flex-input {
+  margin-top: 10px;
+}
 #username {
   border: none;
   box-sizing: border-box;
+  background-color: #3794f2;
   height: 40px;
   font-size: 1em;
   text-align: center;
@@ -74,6 +84,7 @@ ol {
 }
 #log_e {
   color: #d30000;
+  word-wrap: break-word;
 }
 #flex-input {
   flex: 1;
@@ -81,10 +92,8 @@ ol {
   margin-bottom: 20px;
   font-size: 2em;
 }
-#user_text {
-  margin-top: 10px;
-}
 #input {
+  outline: none;
   border: none;
   box-sizing: border-box;
   height: 70px;
@@ -99,10 +108,9 @@ ol {
 #input:hover::placeholder {
   color: #d30000;
 }
-
-#bryce {
-  color: #ba0000
+#bryce:hover {
+  color: #ba0000;
 }
-#mike {
+#mike:hover {
   color: magenta;
 }
