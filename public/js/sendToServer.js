@@ -1,7 +1,4 @@
-var io = io('localhost:3005')
-io.on('connection', function(io) {
-    console.log('a user connected')
-})
+var io = io()
 
 var input = document.getElementById("input")
 var log = document.getElementById("log")
