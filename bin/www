@@ -8,6 +8,7 @@ const app = require('../app');
 const debug = require('debug')('dandyhacks:server');
 const http = require('http');
 const assert = require('assert');
+const CryptoJS = require('crypto-js')
 
 /**
  * Get port from environment and store in Express.
@@ -22,36 +23,56 @@ app.set('port', port);
 
 const server = http.createServer(app);
 
+
 /**
  * MongoDB setup
  */
 
-const { MongoClient } = require('mongodb');
-const dbUrl = 'mongodb://testing.michaeldoylecs.com:27017'
-const dbName = 'daddyhack'
+/*
+const mongoose = require('mongoose');
+const UserModel = require('../models/userModel.js');
 
-MongoClient.connect(dbUrl, { useNewUrlParser: true }, (err, client) => {
-  assert.equal(null, err);
-  
-  console.log('Connected successfully to remote MongoDB server');
+const dbUrl = 'mongodb://testing.michaeldoylecs.com:27017';
+const dbName = 'daddyhack';
 
-  const db = client.db(dbName);
+mongoose.connect(`${dbUrl}/${dbName}`, { useNewUrlParser: true });
+mongoose.Promise = global.Promise;
+const db = mongoose.connection;
 
-  client.close();
-});
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+*/
 
 /**
  * Create Socket.io Server
  */
 
 const io = require('socket.io')(server);
+const MessageQueue = require('../src/messageQueue.js');
+
+const messageQueue = new MessageQueue();
 
 io.on('connection', (socket) => {
-
+  // Client sends a message
   socket.on('send_message', (message, sender, recipient) => {
-    console.log(`${sender} sent '${message}' to ${recipient}`);
+    const cyphertext = CryptoJS.AES.encrypt(message, 'my key');
+    const bytes = CryptoJS.AES.decrypt(cyphertext.toString(), 'my key');
+    const plaintext = bytes.toString(CryptoJS.enc.Utf8);
+    messageQueue.addMessage(message, sender, recipient);
+    console.log(`${sender} sent '${cyphertext}' to ${recipient}`);
+    console.log(`The message decrypts to ${plaintext}`);
   });
 
+  // Client requests all messages
+  socket.on('request_all_message', (user) => {
+    const messages = messageQueue.getAllMessages(user);
+    socket.emit('send_message_array', messages);
+  });
+
+  // Client requests their next message
+  socket.on('request_message', (user) => {
+    const message = messageQueue.getMessage(user);
+    socket.emit('send_message', message);
+  });
 });
 
 /**
