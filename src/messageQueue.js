@@ -6,30 +6,42 @@ class MessageQueue {
   }
 
   addMessage(text, sender, recipient) {
-    if (!(sender in this.userQueues)) {
-      this.userQueues[sender] = [];
+    if (!(recipient in this.userQueues)) {
+      this.userQueues[recipient] = [];
     }
     const newMessage = new Message(text, sender, recipient);
-    this.userQueues[sender].push(newMessage);
+    this.userQueues[recipient].push(newMessage);
   }
 
   getMessageCount(user) {
-    if (this.userQueues[user] != null) { return 'NONE'; }
+    if (this.userQueues[user] == null) { return 'NONE'; }
     return this.userQueues[user].length;
   }
 
-  getMessage(user) {
-    if (this.userQueues[user] != null) { return 'NONE'; }
+  popMessage(user) {
+    if (this.userQueues[user] == null) { return 'NONE'; }
     if (this.userQueues[user].length === 0) { return 'NONE'; }
     return this.userQueues[user].shift();
   }
 
-  getAllMessages(user) {
-    if (this.userQueues[user] != null) { return 'NONE'; }
+  popAllMessages(user) {
+    if (this.userQueues[user] == null) { return 'NONE'; }
     if (this.userQueues[user].length === 0) { return 'NONE'; }
     const messages = this.userQueues[user];
     this.userQueues[user] = [];
     return messages;
+  }
+
+  getMessage(user) {
+    if (this.userQueues[user] == null) { return 'NONE'; }
+    if (this.userQueues[user].length === 0) { return 'NONE'; }
+    return this.userQueues[user][0];
+  }
+
+  getAllMessages(user) {
+    if (this.userQueues[user] == null) { return 'NONE'; }
+    if (this.userQueues[user].length === 0) { return 'NONE'; }
+    return this.userQueues[user];
   }
 }
 
