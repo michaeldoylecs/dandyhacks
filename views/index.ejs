@@ -1,17 +1,30 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='icon' type="image/png" href="/res/tex.png" />
   </head>
+
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <div id="text_field">
+    <div id="header">
+      <h1><%= title %></h1>
+      <p>Welcome to <%= title %></p>
+    </div>
+    
+    <div id="log">
+      <ul id="log_e"></ul>
+    </div>
+    <div id="user_text">
       <input type="text" id="input">
     </div>
+
   </body>
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/sendToServer.js"></script>
+  <script src="/js/toLog.js"></script>
+
 </html>
