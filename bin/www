@@ -48,31 +48,50 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 const io = require('socket.io')(server);
 const Message = require('../src/message');
 const MessageQueue = require('../src/messageQueue.js');
-
+const GroupMessageQueue = require('../src/groupMessageQueue.js');
 
 const messageQueue = new MessageQueue();
+const groupMessageQueue = new GroupMessageQueue();
 
 io.on('connection', (socket) => {
+  socket.on('add_user', (user) => {
+    groupMessageQueue.addUser(user);
+    console.log(`Added '${user}' to groupMessageQueue.`);
+  });
+
+  socket.on('send_group_message', (message, sender) => {
+    groupMessageQueue.addMessage(message, sender);
+    socket.emit('confirm_group_message', new Message(message, sender));
+    console.log(`Added '${message}' from '${sender}' to groupMessageQueue`);
+  });
+
+  socket.on('request_group_message', (user) => {
+    groupMessageQueue.addUser(user);
+    const message = groupMessageQueue.popMessage(user);
+    socket.emit('respond_with_group_message', message);
+    console.log(`'${user}' requested their next message.`);
+  });
+
   // Client sends a message
   socket.on('send_message', (message, sender, recipient) => {
     // const cyphertext = CryptoJS.AES.encrypt(message, 'my key');
     // const bytes = CryptoJS.AES.decrypt(cyphertext.toString(), 'my key');
     // const plaintext = bytes.toString(CryptoJS.enc.Utf8);
     messageQueue.addMessage(message, sender, recipient);
-    io.emit('respond_with_message', new Message(message, sender, sender));
+    socket.emit('confirm_sent_message', new Message(message, sender, recipient));
     console.log(`'${sender}' sent '${message}' to '${recipient}'`);
     console.log(messageQueue.getAllMessages(recipient));
   });
 
   // Client requests all messages
-  socket.on('request_all_message', (user) => {
-    const messages = messageQueue.popAllMessages(user);
+  socket.on('request_all_message', (recipient) => {
+    const messages = messageQueue.popAllMessages(recipient);
     socket.emit('respond_with_message_array', messages);
   });
 
   // Client requests their next message
-  socket.on('request_message', (user) => {
-    const message = messageQueue.popMessage(user);
+  socket.on('request_message', (recipient) => {
+    const message = messageQueue.popMessage(recipient);
     socket.emit('respond_with_message', message);
   });
 });

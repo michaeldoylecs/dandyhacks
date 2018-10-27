@@ -13,7 +13,6 @@ if (getUser() != "") {
     displayName(getUser())
 }
 
-
 function displayName(user) {
     // sets variables
     var inputField
@@ -30,6 +29,8 @@ function displayName(user) {
     userHead.appendChild(userTextNode)
     inputField.appendChild(userHead)
     inputField.removeChild(usernameVal)
+    
+    io.emit('add_user', name)
 }
 
 // event listener for any keypress on username value
@@ -60,9 +61,7 @@ input.addEventListener("keypress", function(e) {
     if (e.key == "Enter") {
         // if the message is not blank
         if (str != "") {
-            // sends message to server
-            io.emit('send_message', str, "Sender", "Recipient")
-            // resets input field value
+            io.emit('send_group_message', str, name)
             input.value = ""
         }
     }
@@ -73,10 +72,7 @@ var usrMsgL = 0;
 var first = true;
 var textQueue = []
 
-// sends message from server to the log
-function toLog(text) {
-
-    // element for single log 
+function toLog(user, text) {
     var ol = document.getElementById("log_e")
     // creates a list element
     var li = document.createElement("li")
@@ -97,6 +93,45 @@ function toLog(text) {
     usrMsgL+=1
 }
 
+io.on('confirm_group_message', function(message) {
+    if (message != null) {
+      toLog("You", message.text)
+    }
+})
+
+io.on('confirm_sent_message', function(message) {
+    if (message != null) {
+      toLog("You", message.text)
+    }
+})
+
+// sends message from server to log
+io.on('respond_with_message', function(message) {
+    if (message != null) {
+      toLog("You", message.text)
+    }
+})
+
+var requestGroupMessageConstantly = setInterval(function() {
+  io.emit('request_group_message', name)
+}, 1000);
+
+io.on('respond_with_group_message', (message) => {
+  if (message != null) {
+    toLog(message.sender, message.text)
+  }
+})
+ 
+var requestMessageConstantly = setInterval(function() {
+  io.emit('request_message', name)
+}, 1000);
+
+io.on('respond_with_message', (message) => {
+  if (message != null) {
+    toLog(message.sender, message.text)
+  }
+})
+
 function setUser(name) {
     document.cookie = name
 }
@@ -105,17 +140,5 @@ function getUser() {
     var decodedCookie = decodeURIComponent(document.cookie)
     console.log(decodedCookie)
     var ca = decodedCookie.split(';')
-    console.log(ca)
     return ca
 }
-
-// sends message from server to log
-io.on('respond_with_message', function(message) {
-    if (message != null) {
-      toLog(message.text)
-    }
-  })
-  
-  var requestMessageConstantly = setInterval(function() {
-    io.emit('request_message', 'Sender')
-  }, 1000);
