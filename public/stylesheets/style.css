@@ -14,7 +14,18 @@ body {
   width: 60%;
 }
 a {
+  text-decoration: none;
   color: #00B7FF;
+}
+input {
+  margin: auto;
+  width: 100%;
+}
+ol {
+  padding: 0;
+  list-style-type: none;
+  transform: rotate(180deg);
+  overflow-y: auto;
 }
 .flexbox-container {
   display: flex;
@@ -25,52 +36,50 @@ a {
   flex: 1 1 auto;
 }
 #flex-header {
-  flex: 1;
-}
-#flex-log {
-  flex: 5;
-  overflow-y: hidden;
-}
-#flex-input {
-  flex: 1;
-}
-input {
-  margin: auto;
-  width: 100%;
-}
-ol {
-  /*display: flex;
-  flex-direction: column-reverse;
-  vertical-align: 0;*/
-  padding: 0;
-  list-style-type: none;
-  transform: rotate(180deg);
-  overflow-y: auto;
-}
-#header {
+  flex: .8;
+  padding-top: 20px;
+  font-size: 1em;
   text-align: center;
 }
-<<<<<<< HEAD
-#meat {
-  font-size: 2em;  
+#flex-login {
+  flex: .6;
+  font-size: 1.5em;
 }
-#input_and_log {
-  position: fixed;
-  bottom: 10px;
-  width: 50%;
-  overflow: hidden;
-}
-#username {
-  height: 40px;
-}
-#current {
+#flex-login > h2 {
   color: #d30000;
   text-align: center;
 }
-#FLIPBOX {
+#username {
+  border: none;
+  box-sizing: border-box;
+  height: 40px;
+  font-size: 1em;
+  text-align: center;
+}
+#username::placeholder {
+  color: #d30000;
+}
+#username:hover::placeholder {
+  color: #00b7ff;
+}
+#flex-log {
+  flex: 5;
+  overflow-y: auto;
   transform: rotate(180deg);
-  background-color: #d30000;
-  max-height: inherit;
+  font-size: 2em;
+  background-color: #f5f5f5;
+}
+#flex-log::-webkit-scrollbar {
+  width: 0;
+}
+#log_e {
+  color: #d30000;
+}
+#flex-input {
+  flex: 1;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 2em;
 }
 #user_text {
   margin-top: 10px;
@@ -84,9 +93,16 @@ ol {
 #input:hover {
   background-color: #f9f9f9;
 }
-input::placeholder {
+#input::placeholder {
   color: #00b7ff;
 }
 #input:hover::placeholder {
   color: #d30000;
+}
+
+#bryce {
+  color: #ba0000
+}
+#mike {
+  color: magenta;
 }
