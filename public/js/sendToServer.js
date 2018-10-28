@@ -172,6 +172,12 @@ function toLog(user, text, color, socketId) {
             sound.setAttribute("preload", "auto")
             document.body.appendChild(sound)
             sound.play()
+        } else {
+            var sound = document.createElement("audio")
+            sound.src = "/res/ping.wav"
+            sound.setAttribute("preload", "auto")
+            document.body.appendChild(sound)
+            sound.play()
         }
         li.style.animation = "none"
         li.style.backgroundColor = "#a8a8a8"
