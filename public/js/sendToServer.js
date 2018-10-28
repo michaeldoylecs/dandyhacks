@@ -120,6 +120,169 @@ input.addEventListener("keypress", function(e) {
     }
 })
 
+function buildListItem(tokens) {
+  var token
+  var i
+  var s_i
+  var mode = 'normal'
+  var li_string = ''
+  var span
+  var liElement = document.createElement("li")
+  // Each token
+  for (i = 0; i < tokens.length; i++) {
+    li_string += ' '
+    token = tokens[i]
+
+    // Check for @everyone
+    if (token == '@everyone') {
+      var span = document.createElement('span')
+      span.textContent = li_string
+      liElement.appendChild(span)
+      var span = document.createElement('span')
+      span.textContent = token
+      liElement.appendChild(span)
+      li_string = ''
+      continue
+    }
+
+    // Check for @ping
+    if (token[0] == '@') {
+      var span = document.createElement('span')
+      span.textContent = li_string
+      liElement.appendChild(span)
+      var span = document.createElement('span')
+      span.textContent = token
+      liElement.appendChild(span)
+      li_string = ''
+      continue
+    }
+
+    // Each character in a token
+    var prevC = null
+    for (s_i = 0; s_i < token.length; s_i++) {
+      var c = token.charAt(s_i)
+      if (mode == 'normal' && c === '*') {
+        if (token.charAt(s_i + 1) == '*') {
+          if (token.charAt(s_i + 2) == '*') {
+            mode = 'bolditalic'
+            s_i += 2
+            var span = document.createElement('span')
+            span.textContent = li_string
+            liElement.appendChild(span)
+            li_string = ''
+            continue
+          } else {
+            mode = 'bold'
+            s_i += 1
+            var span = document.createElement('span')
+            span.textContent = li_string
+            liElement.appendChild(span)
+            li_string = ''
+            continue
+          }
+        } else {
+          var span = document.createElement('span')
+          span.textContent = li_string
+          liElement.appendChild(span)
+          li_string = ''
+          mode = 'italic'
+          continue
+        }
+      }
+      if (mode == 'bolditalic') {
+        if (c == '*') {
+          if (token.substring(s_i, s_i + 3) == '***') {
+            var span = document.createElement('span')
+            span.style.fontWeight = 'bold'
+            span.style.fontStyle = 'italic'
+            span.textContent = li_string
+            liElement.appendChild(span)
+            s_i += 2
+            li_string= ""
+            mode = 'normal'
+            continue
+          } else if (token.substring(s_i, s_i + 2) == '**') {
+            var span = document.createElement('span')
+            span.textContent = '*'
+            liElement.appendChild(span)
+            var span = document.createElement('span')
+            span.style.fontWeight = 'bold'
+            span.textContent = li_string
+            liElement.appendChild(span)
+            s_i += 2
+            li_string= ""
+            mode = 'normal'
+            continue
+          } else {
+            var span = document.createElement('span')
+            span.textContent = '**'
+            liElement.appendChild(span)
+            var span = document.createElement('span')
+            span.style.fontStyle = 'italic'
+            span.textContent = li_string
+            liElement.appendChild(span)
+            li_string= ""
+            mode = 'normal'
+            continue
+          }
+        }
+      }
+      if (mode == 'bold') {
+        if (c == '*') {
+          if (token.substring(s_i, s_i + 2) == '**') {
+            var span = document.createElement('span')
+            span.style.fontWeight = 'bold'
+            span.textContent = li_string
+            liElement.appendChild(span)
+            s_i += 1
+            li_string= ""
+            mode = 'normal'
+            continue
+          } else {
+            var span = document.createElement('span')
+            span.textContent = '**'
+            liElement.appendChild(span)
+            var span = document.createElement('span')
+            span.style.fontStyle = 'italic'
+            span.textContent = li_string
+            liElement.appendChild(span)
+            li_string= ""
+            mode = 'normal'
+            continue
+          }
+        }
+      }
+      if (mode == 'italic') {
+        if (c == '*') {
+          var span = document.createElement('span')
+          span.style.fontStyle = 'italic'
+          span.textContent = li_string
+          liElement.appendChild(span)
+          li_string= ""
+          mode = 'normal'
+          continue
+        } else {
+          li_string += c
+          continue
+        }
+      }
+      li_string += c
+      prevC = c
+    }
+  }
+  var span = document.createElement('span')
+  if (mode == 'bolditalic') {
+    li_string = '***' + li_string
+  } else if (mode == 'bold') {
+    li_string = '**' + li_string
+  } else if (mode == 'italic') {
+    li_string = '*' + li_string
+  }
+  span.textContent = li_string
+  liElement.appendChild(span)
+  return liElement
+}
+
 // sets up vars for max length, first, and the message queue
 var usrMsgL = 0;
 var first = true;
@@ -127,8 +290,6 @@ var textQueue = []
 
 function toLog(user, text, color, socketId) {
     var ol = document.getElementById("log_e")
-    // creates a list element
-    var li = document.createElement("li")
 
     // max number of stored messages on queue
     if (usrMsgL >= 200) {
@@ -137,152 +298,43 @@ function toLog(user, text, color, socketId) {
         ol.removeChild(lm)
     } 
 
-    var form = format(text)
-    var printable = ""
-    var style = 0
+    var tokens = text.split(' ')
+    var li = buildListItem(tokens)
 
-    // markdown logic
-    if (form != "") {
-        console.log("form is: " + form)
-        if (form[0] == '@') {
-            if (form.substring(1, form.length) == "everyone") {
-                var sound = document.createElement("audio")
-                sound.src = "/res/ateveryone.wav"
-                sound.setAttribute("preload", "auto")
-                document.body.appendChild(sound)
-                sound.play()
-            } else {
-                var sound = document.createElement("audio")
-                sound.src = "/res/ping.wav"
-                sound.setAttribute("preload", "auto")
-                document.body.appendChild(sound)
-                sound.play()
-            }
-            printable = form.substring(0, form.length)
-            li.style.animation = "none"
-            li.style.backgroundColor = "#a8a8a8"
-        } else if (form[form.length-2] == '*' && form[form.length-1] == '*') { 
-            printable = form.substring(0, form.length-2)
-            li.style.fontWeight = "bold"
-        } else if (form[form.length-1] == '*') {
-            printable = form.substring(0, form.length-1)
-            li.style.fontStyle = "italic"
-        } else if (form[form.length-1] == '~') {
-            printable = form.substring(0, form.length-1)
-            li.style.textDecoration = "line-through"
-        } else if (form[form.length-1] == '_') {
-            printable = form.substring(0, form.length-1)
-            li.style.textDecoration = "underline"
-        } else {
-            printable = form
-        }
+    // Check pings
+    var i
+    for (i = 0; i < li.childNodes.length; i++) {
+      console.log(li.childNodes[i].textContent)
+      if (li.childNodes[i].textContent == '@everyone') {
+        console.log('Found @everyone!')
+        var sound = document.createElement('audio')
+        sound.src = '/res/ateveryone.wav'
+        sound.preload = 'auto'
+        document.body.appendChild(sound)
+        sound.play()
+        li.style.animation = 'none'
+        li.style.backgroundColor = '#fff766'
+      }
+      if (li.childNodes[i].textContent == '@' + getUser()) {
+        console.log('Found @ping!')
+        var sound = document.createElement('audio')
+        sound.src = '/res/ping.wav'
+        sound.preload = 'auto'
+        document.body.appendChild(sound)
+        sound.play()
+        li.style.animation = 'none'
+        li.style.backgroundColor = '#fff766'
+      }
     }
+
     // appends to message to the created list element
-    li.appendChild(document.createTextNode("(" + 
-        user + "@" + socketId.slice(0, 5) + ") " + printable))
+    li.insertBefore(document.createTextNode("(" + user + "@" + socketId.slice(0, 5) + ") "), li.childNodes[0])
     li.style.color = "#" + color
     // appends list element to log element
     ol.appendChild(li)
     // pushes message onto the queue
     textQueue.push(li)
     usrMsgL+=1
-}
-
-function format(text) {
-    var prev
-    var rule = true
-    var n = ""
-    var formatted = false
-    var italStart = false
-    var bold = false
-    var firstA = false
-    var firstLT = false 
-    var firstUL = false
-    for (var i = 0; i < text.length; i++) {
-        var c = text.charAt(i)
-        // checks pings
-        if (c == '@') {
-            if (prev == ' ' || rule) {
-                var k = i
-                while (text.charAt(k) != ' ' && k < text.length) {
-                    n += text.charAt(k)
-                    k++
-                }
-                rule = false
-            }
-            formatted = true
-        // checks italic and bold
-        } else if (c == '*' && !italStart && !bold) {
-            if (c == '*' && text.charAt(i+1) == '*') {
-                bold = true
-            } else {
-                italStart = true
-            }
-            var k = i + 1
-            if (bold) {
-                k++
-                while (firstA != true && text.charAt(k) != '*') {
-                    if (k == text.length) {
-                        n = ""
-                        break
-                    } else if (text.charAt(k) == '*') {
-                        firstA = true
-                    }
-                    n += text.charAt(k)
-                    k++
-                }
-            } else {
-                while (text.charAt(k) != '*') {
-                    if (k == text.length) {
-                        n = ""
-                        break
-                    }
-                    n += text.charAt(k)
-                    k++
-                }
-            }
-            if (bold) {
-                n += '**'
-            } else {
-                n += '*'
-            }
-            formatted = true
-        // checks line through
-        } else if (c == '~' && !firstLT) {
-            var k = i + 2
-            while (firstLT != true || text.charAt(k) != '~') {
-                if (k == text.length) {
-                    n = ""
-                    break
-                } else if (text.charAt(k) == '~') {
-                    firstLT = true
-                }
-                n += text.charAt(k)
-                k++
-            }
-            formatted = true
-        // checks underline
-        } else if (c == '_' && !firstUL) {
-            var k = i + 2
-            while (firstUL != true || text.charAt(k) != '_') {
-                if (k == text.length) {
-                    n = ""
-                    break
-                } else if (text.charAt(k) == '_') {
-                    firstUL = true
-                }
-                n += text.charAt(k)
-                k++
-            }
-            formatted = true
-        // default text
-        } else if (!formatted) {
-            n += c
-        }
-        prev = c
-    }
-    return n
-
 }
 
 function updateOnlineUsers(users) {
