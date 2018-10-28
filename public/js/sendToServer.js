@@ -5,7 +5,6 @@ var io = io()
 
 // username value
 var usernameVal = document.getElementById("username")
-var name = "anonymous"
 
 // checks for username
 if (getUser() != "") {
@@ -115,7 +114,7 @@ input.addEventListener("keypress", function(e) {
     if (e.key == "Enter") {
         // if the message is not blank
         if (str != "") {
-            io.emit('send_group_message', str, name)
+            io.emit('send_group_message', str, getUser())
             input.value = ""
         }
     }
@@ -139,7 +138,7 @@ function toLog(user, text) {
     } 
 
     // appends to message to the created list element
-    li.appendChild(document.createTextNode("(" + getUser() + ") " + text))
+    li.appendChild(document.createTextNode("(" + user + ") " + text))
     // appends list element to log element
     ol.appendChild(li)
     // pushes message onto the queue
@@ -147,45 +146,12 @@ function toLog(user, text) {
     usrMsgL+=1
 }
 
-io.on('confirm_group_message', function(message) {
-    if (message != null) {
-      toLog("You", message.text)
-    }
-})
-
-io.on('confirm_sent_message', function(message) {
-    if (message != null) {
-      toLog("You", message.text)
-    }
-})
-
-// sends message from server to log
-io.on('respond_with_message', function(message) {
-    if (message != null) {
-      toLog("You", message.text)
-    }
-})
-
-var requestGroupMessageConstantly = setInterval(function() {
-  io.emit('request_group_message', name)
-}, 1000);
-
-io.on('respond_with_group_message', (message) => {
+io.on('new_group_message', (message) => {
   if (message != null) {
     toLog(message.sender, message.text)
   }
 })
  
-var requestMessageConstantly = setInterval(function() {
-  io.emit('request_message', name)
-}, 1000);
-
-io.on('respond_with_message', (message) => {
-  if (message != null) {
-    toLog(message.sender, message.text)
-  }
-})
-
 function setUser(name) {
     document.cookie = name
 }
@@ -193,5 +159,5 @@ function setUser(name) {
 function getUser() {
     var decodedCookie = decodeURIComponent(document.cookie)
     var ca = decodedCookie.split(';')
-    return ca
+    return ca[0] != undefined ? ca[0] : "anonymous"
 }
