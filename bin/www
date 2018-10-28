@@ -62,12 +62,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send_group_message', (text, sender) => {
-    const message = new Message(text, sender);
-    if (!(sender in userColors)) {
-      userColors[sender] = ('00000' + (Math.random() * (1 << 24) | 0).toString(16)).slice(-6);
+    const message = new Message(text, sender, socket.id);
+    if (!(socket.id in userColors)) {
+      userColors[socket.id] = ('00000' + (Math.random() * (1 << 24) | 0).toString(16)).slice(-6);
     }
-    io.emit('new_group_message', message, userColors[sender]);
-    console.log(`'${sender}' sent '${text}'`);
+    io.emit('new_group_message', message);
+    console.log(`'${sender}#${socket.id}' sent '${text}' with color '${userColors[socket.id]}'`);
   });
 
   socket.on('request_group_message', (user) => {
