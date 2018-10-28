@@ -124,7 +124,7 @@ var usrMsgL = 0;
 var first = true;
 var textQueue = []
 
-function toLog(user, text) {
+function toLog(user, text, color, socketId) {
     var ol = document.getElementById("log_e")
     // creates a list element
     var li = document.createElement("li")
@@ -136,18 +136,48 @@ function toLog(user, text) {
         ol.removeChild(lm)
     } 
 
+    // checks if user was pinged
+    var prev
+    var address = ""
+    var rule = true
+    var match = false
+    var n = ""
+    for (var i = 0; i < text.length; i++) {
+        var c = text.charAt(i)
+        if (c == '@') {
+            if (prev == ' ' || rule) {
+                var k = i + 1
+                while (text.charAt(k) != ' ' && k < text.length) {
+                    n += text.charAt(k)
+                    k++
+                }
+                if (n == getUser()) {
+                    match = true
+                }
+                rule = false
+            }
+        }
+        prev = c
+    }
     // appends to message to the created list element
-    li.appendChild(document.createTextNode("(" + user + ") " + text))
+    li.appendChild(document.createTextNode("(" + 
+        user + "@" + socketId.slice(0, 5) + ") " + text))
+    li.style.color = "#" + color
     // appends list element to log element
     ol.appendChild(li)
+    // highlights text if pinged
+    if (match) {
+        li.style.animation = "none"
+        li.style.backgroundColor = "#a8a8a8"
+    }
     // pushes message onto the queue
     textQueue.push(li)
     usrMsgL+=1
 }
 
-io.on('new_group_message', (message) => {
+io.on('new_group_message', (message, color) => {
   if (message != null) {
-    toLog(message.sender, message.text)
+    toLog(message.sender, message.text, color, message.socketId)
   }
 })
  
