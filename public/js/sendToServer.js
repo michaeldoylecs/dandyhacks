@@ -54,6 +54,7 @@ if (getHeader()) {
                     iF.appendChild(uH)
                     iF.removeChild(userHead)
                     io.emit('add_user', formatted)
+                    toLog()
                     location.reload();
                 }
             }
