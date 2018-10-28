@@ -57,6 +57,10 @@ ol {
 }
 #flex-input {
   margin-top: 10px;
+  flex: 1;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 2em;
 }
 #username {
   border: none;
@@ -85,12 +89,6 @@ ol {
 #log_e {
   color: #d30000;
   word-wrap: break-word;
-}
-#flex-input {
-  flex: 1;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  font-size: 2em;
 }
 #input {
   outline: none;
