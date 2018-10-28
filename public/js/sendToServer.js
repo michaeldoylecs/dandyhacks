@@ -136,7 +136,7 @@ function toLog(user, text, color, socketId) {
         ol.removeChild(lm)
     } 
 
-    // checks if user was pinged
+    // checks pings
     var prev
     var rule = true
     var match = false
@@ -150,7 +150,7 @@ function toLog(user, text, color, socketId) {
                     n += text.charAt(k)
                     k++
                 }
-                if (n == getUser()) {
+                if (n == getUser() || n == "everyone") {
                     match = true
                 }
                 rule = false
@@ -166,6 +166,13 @@ function toLog(user, text, color, socketId) {
     ol.appendChild(li)
     // highlights text if pinged
     if (match) {
+        if (n == "everyone") {
+            var sound = document.createElement("audio")
+            sound.src = "/res/ateveryone.wav"
+            sound.setAttribute("preload", "auto")
+            document.body.appendChild(sound)
+            sound.play()
+        }
         li.style.animation = "none"
         li.style.backgroundColor = "#a8a8a8"
     }
