@@ -53,6 +53,8 @@ const GroupMessageQueue = require('../src/groupMessageQueue.js');
 const messageQueue = new MessageQueue();
 const groupMessageQueue = new GroupMessageQueue();
 
+const userColors = {}
+
 io.on('connection', (socket) => {
   socket.on('add_user', (user) => {
     groupMessageQueue.addUser(user);
@@ -61,7 +63,10 @@ io.on('connection', (socket) => {
 
   socket.on('send_group_message', (text, sender) => {
     const message = new Message(text, sender);
-    io.emit('new_group_message', (message));
+    if (!(sender in userColors)) {
+      userColors[sender] = ('00000' + (Math.random() * (1 << 24) | 0).toString(16)).slice(-6);
+    }
+    io.emit('new_group_message', message, userColors[sender]);
     console.log(`'${sender}' sent '${text}'`);
   });
 
