@@ -200,11 +200,9 @@ function updateOnlineUsers(users) {
 
 io.on('socket_id', function (socketId) {
   mySocketId = socketId;
-  console.log("mySocketId: " + mySocketId)
 })
 
 io.on('user_list', function (userList) {
-  console.log(`playerList: ${userList}`)
   updateOnlineUsers(userList)
 })
 
