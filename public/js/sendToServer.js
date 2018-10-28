@@ -164,9 +164,15 @@ function toLog(user, text, color, socketId) {
         } else if (form[form.length-2] == '*' && form[form.length-1] == '*') { 
             printable = form.substring(0, form.length-2)
             li.style.fontWeight = "bold"
-        }else if (form[form.length-1] == '*') {
+        } else if (form[form.length-1] == '*') {
             printable = form.substring(0, form.length-1)
             li.style.fontStyle = "italic"
+        } else if (form[form.length-1] == '~') {
+            printable = form.substring(0, form.length-1)
+            li.style.textDecoration = "line-through"
+        } else if (form[form.length-1] == '_') {
+            printable = form.substring(0, form.length-1)
+            li.style.textDecoration = "underline"
         } else {
             printable = form
         }
@@ -190,6 +196,8 @@ function format(text) {
     var italStart = false
     var bold = false
     var firstA = false
+    var firstLT = false 
+    var firstUL = false
     for (var i = 0; i < text.length; i++) {
         var c = text.charAt(i)
         // checks pings
@@ -237,6 +245,34 @@ function format(text) {
                 n += '**'
             } else {
                 n += '*'
+            }
+            formatted = true
+        // checks line through
+        } else if (c == '~' && !firstLT) {
+            var k = i + 2
+            while (firstLT != true || text.charAt(k) != '~') {
+                if (k == text.length) {
+                    n = ""
+                    break
+                } else if (text.charAt(k) == '~') {
+                    firstLT = true
+                }
+                n += text.charAt(k)
+                k++
+            }
+            formatted = true
+        // checks underline
+        } else if (c == '_' && !firstUL) {
+            var k = i + 2
+            while (firstUL != true || text.charAt(k) != '_') {
+                if (k == text.length) {
+                    n = ""
+                    break
+                } else if (text.charAt(k) == '_') {
+                    firstUL = true
+                }
+                n += text.charAt(k)
+                k++
             }
             formatted = true
         // default text
