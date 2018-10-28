@@ -136,13 +136,40 @@ function toLog(user, text, color, socketId) {
         ol.removeChild(lm)
     } 
 
+    // checks if user was pinged
+    var prev
+    var address = ""
+    var rule = true
+    var match = false
+    var n = ""
+    for (var i = 0; i < text.length; i++) {
+        var c = text.charAt(i)
+        if (c == '@') {
+            if (prev == ' ' || rule) {
+                var k = i + 1
+                while (text.charAt(k) != ' ' && k < text.length) {
+                    n += text.charAt(k)
+                    k++
+                }
+                if (n == getUser()) {
+                    match = true
+                }
+                rule = false
+            }
+        }
+        prev = c
+    }
     // appends to message to the created list element
     li.appendChild(document.createTextNode("(" + 
-        user + "@" + socketId.slice(0, 6) + ") " + text))
-    console.log(color)
+        user + "@" + socketId.slice(0, 5) + ") " + text))
     li.style.color = "#" + color
     // appends list element to log element
     ol.appendChild(li)
+    // highlights text if pinged
+    if (match) {
+        li.style.animation = "none"
+        li.style.backgroundColor = "#a8a8a8"
+    }
     // pushes message onto the queue
     textQueue.push(li)
     usrMsgL+=1

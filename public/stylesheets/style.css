@@ -80,15 +80,29 @@ ol {
   flex: 5;
   overflow-y: auto;
   transform: rotate(180deg);
-  font-size: 2em;
+  font-size: 1.5em;
   background-color: #f5f5f5;
 }
 #flex-log::-webkit-scrollbar {
   width: 0;
 }
 #log_e {
-  color: #d30000;
   word-wrap: break-word;
+}
+li {
+  animation-name: newline;
+  animation-duration: 1.5s;
+  transition: background-color .2s ease;
+}
+li:hover {
+  background-color: #e0e0e0;
+}
+@keyframes newline {
+  from {
+    background: #c6c6c6;
+  } to {
+    background: #f5f5f5;
+  }
 }
 #input {
   outline: none;
