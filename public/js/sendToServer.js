@@ -136,55 +136,116 @@ function toLog(user, text, color, socketId) {
         ol.removeChild(lm)
     } 
 
-    // checks pings
+    var form = format(text)
+    var printable = ""
+    var style = 0
+
+    // markdown logic
+    if (form != "") {
+        console.log("form is: " + form)
+        if (form[0] == '@') {
+            if (form.substring(1, form.length) == "everyone") {
+                var sound = document.createElement("audio")
+                sound.src = "/res/ateveryone.wav"
+                sound.setAttribute("preload", "auto")
+                document.body.appendChild(sound)
+                sound.play()
+            } else {
+                var sound = document.createElement("audio")
+                sound.src = "/res/ping.wav"
+                sound.setAttribute("preload", "auto")
+                document.body.appendChild(sound)
+                sound.play()
+            }
+            printable = form.substring(0, form.length)
+            li.style.animation = "none"
+            li.style.backgroundColor = "#a8a8a8"
+        } else if (form[form.length-2] == '*' && form[form.length-1] == '*') { 
+            printable = form.substring(0, form.length-2)
+            li.style.fontWeight = "bold"
+        }else if (form[form.length-1] == '*') {
+            printable = form.substring(0, form.length-1)
+            li.style.fontStyle = "italic"
+        } else {
+            printable = form
+        }
+    }
+    // appends to message to the created list element
+    li.appendChild(document.createTextNode("(" + 
+        user + "@" + socketId.slice(0, 5) + ") " + printable))
+    li.style.color = "#" + color
+    // appends list element to log element
+    ol.appendChild(li)
+    // pushes message onto the queue
+    textQueue.push(li)
+    usrMsgL+=1
+}
+
+function format(text) {
     var prev
     var rule = true
-    var match = false
     var n = ""
+    var formatted = false
+    var italStart = false
+    var bold = false
+    var firstA = false
     for (var i = 0; i < text.length; i++) {
         var c = text.charAt(i)
+        // checks pings
         if (c == '@') {
             if (prev == ' ' || rule) {
-                var k = i + 1
+                var k = i
                 while (text.charAt(k) != ' ' && k < text.length) {
                     n += text.charAt(k)
                     k++
                 }
-                if (n == getUser() || n == "everyone") {
-                    match = true
-                }
                 rule = false
             }
+            formatted = true
+        // checks italic and bold
+        } else if (c == '*' && !italStart && !bold) {
+            if (c == '*' && text.charAt(i+1) == '*') {
+                bold = true
+            } else {
+                italStart = true
+            }
+            var k = i + 1
+            if (bold) {
+                k++
+                while (firstA != true && text.charAt(k) != '*') {
+                    if (k == text.length) {
+                        n = ""
+                        break
+                    } else if (text.charAt(k) == '*') {
+                        firstA = true
+                    }
+                    n += text.charAt(k)
+                    k++
+                }
+            } else {
+                while (text.charAt(k) != '*') {
+                    if (k == text.length) {
+                        n = ""
+                        break
+                    }
+                    n += text.charAt(k)
+                    k++
+                }
+            }
+            if (bold) {
+                n += '**'
+            } else {
+                n += '*'
+            }
+            formatted = true
+        // default text
+        } else if (!formatted) {
+            n += c
         }
         prev = c
     }
-    // appends to message to the created list element
-    li.appendChild(document.createTextNode("(" + 
-        user + "@" + socketId.slice(0, 5) + ") " + text))
-    li.style.color = "#" + color
-    // appends list element to log element
-    ol.appendChild(li)
-    // highlights text if pinged
-    if (match) {
-        if (n == "everyone") {
-            var sound = document.createElement("audio")
-            sound.src = "/res/ateveryone.wav"
-            sound.setAttribute("preload", "auto")
-            document.body.appendChild(sound)
-            sound.play()
-        } else {
-            var sound = document.createElement("audio")
-            sound.src = "/res/ping.wav"
-            sound.setAttribute("preload", "auto")
-            document.body.appendChild(sound)
-            sound.play()
-        }
-        li.style.animation = "none"
-        li.style.backgroundColor = "#a8a8a8"
-    }
-    // pushes message onto the queue
-    textQueue.push(li)
-    usrMsgL+=1
+    return n
+
 }
 
 io.on('new_group_message', function(message, color) {
