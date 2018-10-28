@@ -8,9 +8,59 @@ var usernameVal = document.getElementById("username")
 var name = "anonymous"
 
 // checks for username
-console.log(getUser())
 if (getUser() != "") {
     displayName(getUser())
+}
+if (getHeader()) {
+    getHeader().onclick = function() {
+
+        // sets variables
+        var inputField
+        var userHead;
+        var userTextNode;
+
+        // variable assignment
+        inputField = getHeader().parentElement
+        userHead = document.createElement("input")
+        userHead.id = "username"
+        userHead.placeholder = "change name"
+
+        // adding text and removing input
+        inputField.appendChild(userHead)
+        inputField.removeChild(getHeader())
+
+        userHead.addEventListener("keypress", function(e) {
+
+            // trimmed username
+            var formatted = String(userHead.value).trim()
+            // conditional for submission
+            if (e.key == "Enter") {
+        
+                // if the usernae is not blank
+                if (formatted != "") {
+                    setUser(formatted)
+                    // sets variables
+                    var iF
+                    var uH;
+                    var uTN;
+
+                    // variable assignment
+                    iF = userHead.parentElement
+                    uTN = document.createTextNode(formatted)
+                    uH = document.createElement("h2")
+                    uH.id = "header"
+                    document.getElementById("input").placeholder = ("say something, " + getUser() + "...")
+
+                    // adding text and removing input
+                    uH.appendChild(uTN)
+                    iF.appendChild(uH)
+                    iF.removeChild(userHead)
+                    io.emit('add_user', formatted)
+                    location.reload();
+                }
+            }
+        })
+    }
 }
 
 function displayName(user) {
@@ -23,14 +73,18 @@ function displayName(user) {
     inputField = usernameVal.parentElement
     userTextNode = document.createTextNode(user)
     userHead = document.createElement("h2")
+    userHead.id = "header"
     document.getElementById("input").placeholder += (", " + getUser() + "...")
 
     // adding text and removing input
     userHead.appendChild(userTextNode)
     inputField.appendChild(userHead)
     inputField.removeChild(usernameVal)
-    
     io.emit('add_user', name)
+}
+
+function getHeader() {
+    return document.getElementById("header");
 }
 
 // event listener for any keypress on username value
@@ -138,7 +192,6 @@ function setUser(name) {
 
 function getUser() {
     var decodedCookie = decodeURIComponent(document.cookie)
-    console.log(decodedCookie)
     var ca = decodedCookie.split(';')
     return ca
 }
