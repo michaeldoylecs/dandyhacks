@@ -176,10 +176,14 @@ function toLog(user, text, color, socketId) {
     usrMsgL+=1
 }
 
-io.on('new_group_message', (message, color) => {
+io.on('new_group_message', function(message, color) {
   if (message != null) {
     toLog(message.sender, message.text, color, message.socketId)
   }
+})
+
+io.on('new_user_joined', function(user, socketId) {
+  // Do something.
 })
  
 function setUser(name) {
