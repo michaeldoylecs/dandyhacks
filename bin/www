@@ -66,7 +66,7 @@ io.on('connection', (socket) => {
     if (!(socket.id in userColors)) {
       userColors[socket.id] = ('00000' + (Math.random() * (1 << 24) | 0).toString(16)).slice(-6);
     }
-    io.emit('new_group_message', message);
+    io.emit('new_group_message', message, userColors[socket.id]);
     console.log(`'${sender}#${socket.id}' sent '${text}' with color '${userColors[socket.id]}'`);
   });
 
