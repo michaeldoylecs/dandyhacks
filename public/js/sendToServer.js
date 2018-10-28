@@ -16,7 +16,6 @@ if (getHeader()) {
         // sets variables
         var inputField
         var userHead;
-        var userTextNode;
 
         // variable assignment
         inputField = getHeader().parentElement
@@ -79,7 +78,7 @@ function displayName(user) {
     userHead.appendChild(userTextNode)
     inputField.appendChild(userHead)
     inputField.removeChild(usernameVal)
-    io.emit('add_user', name)
+    io.emit('add_user', user)
 }
 
 function getHeader() {
