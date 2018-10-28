@@ -124,7 +124,7 @@ var usrMsgL = 0;
 var first = true;
 var textQueue = []
 
-function toLog(user, text) {
+function toLog(user, text, color, socketId) {
     var ol = document.getElementById("log_e")
     // creates a list element
     var li = document.createElement("li")
@@ -137,7 +137,10 @@ function toLog(user, text) {
     } 
 
     // appends to message to the created list element
-    li.appendChild(document.createTextNode("(" + user + ") " + text))
+    li.appendChild(document.createTextNode("(" + 
+        user + "@" + socketId.slice(0, 6) + ") " + text))
+    console.log(color)
+    li.style.color = "#" + color
     // appends list element to log element
     ol.appendChild(li)
     // pushes message onto the queue
@@ -145,9 +148,9 @@ function toLog(user, text) {
     usrMsgL+=1
 }
 
-io.on('new_group_message', (message) => {
+io.on('new_group_message', (message, color) => {
   if (message != null) {
-    toLog(message.sender, message.text)
+    toLog(message.sender, message.text, color, message.socketId)
   }
 })
  
