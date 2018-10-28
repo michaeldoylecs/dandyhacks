@@ -54,7 +54,6 @@ if (getHeader()) {
                     iF.appendChild(uH)
                     iF.removeChild(userHead)
                     io.emit('add_user', formatted)
-                    toLog()
                     location.reload();
                 }
             }
@@ -139,7 +138,6 @@ function toLog(user, text, color, socketId) {
 
     // checks if user was pinged
     var prev
-    var address = ""
     var rule = true
     var match = false
     var n = ""
@@ -183,7 +181,9 @@ io.on('new_group_message', function(message, color) {
 })
 
 io.on('new_user_joined', function(user, socketId) {
-  // Do something.
+  var color = "f70000"
+  var text = "user \"" + user + "\" joined!"  
+  toLog("", text, color, "")
 })
  
 function setUser(name) {
