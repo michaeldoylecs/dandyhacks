@@ -2,6 +2,7 @@
 
 // socket io import
 var io = io()
+var mySocketId = null
 
 // username value
 var usernameVal = document.getElementById("username")
@@ -174,18 +175,44 @@ function toLog(user, text, color, socketId) {
     usrMsgL+=1
 }
 
-io.on('new_group_message', function(message, color) {
+function updateOnlineUsers(users) {
+  var onlineUsersString = ''
+  var i
+  for (i = 0; i < users.length; i++) {
+    onlineUsersString = "" + onlineUsersString + users[i] + ", "
+  }
+  console.log(onlineUsersString)
+  document.getElementById('online-users').textContent = onlineUsersString.substring(0, onlineUsersString.length - 2)
+}
+
+io.on('socket_id', function (socketId) {
+  mySocketId = socketId;
+  console.log("mySocketId: " + mySocketId)
+})
+
+io.on('user_list', function (userList) {
+  console.log(`playerList: ${userList}`)
+  updateOnlineUsers(userList)
+})
+
+io.on('new_group_message', function (message, color) {
   if (message != null) {
     toLog(message.sender, message.text, color, message.socketId)
   }
 })
 
-io.on('new_user_joined', function(user, socketId) {
+io.on('new_user_joined', function (user, socketId) {
   var color = "f70000"
-  var text = "user \"" + user + "\" joined!"  
+  var text = "user \"" + user + "\" joined!"
   toLog("", text, color, "")
 })
- 
+
+io.on('user_left', function (user) {
+  var color = "f70000"
+  var text = "user \"" + user + "\" left!"
+  toLog("", text, color, "")
+})
+
 function setUser(name) {
     document.cookie = name
 }

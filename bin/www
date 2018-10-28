@@ -50,17 +50,30 @@ const Message = require('../src/message');
 const MessageQueue = require('../src/messageQueue.js');
 const GroupMessageQueue = require('../src/groupMessageQueue.js');
 
-const messageQueue = new MessageQueue();
-const groupMessageQueue = new GroupMessageQueue();
-
 const userColors = {}
+const userList = {}
 
 io.on('connection', (socket) => {
+  socket.emit('socket_id', socket.id);
+
+  socket.on('connect', () => {
+    socket.emit('user_list', Object.values(userList));
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`'${userList[socket.id]}@${socket.id.slice(0, 5)}' disconnected`);
+    io.emit('user_left', userList[socket.id], socket.id);
+    delete userList[socket.id];
+    delete userColors[socket.id];
+    io.emit('user_list', Object.values(userList));
+  });
 
   socket.on('add_user', (user) => {
-    groupMessageQueue.addUser(user);
+    userList[socket.id] = user;
+    userColors[socket.id] = ('00000' + (Math.random() * (1 << 24) | 0).toString(16)).slice(-6);
     io.emit('new_user_joined', user, socket.id);
-    console.log(`Added '${user}' to groupMessageQueue.`);
+    io.emit('user_list', Object.values(userList));
+    console.log(`'${user}@${socket.id.slice(0, 5)}' joined!`);
   });
 
   socket.on('send_group_message', (text, sender) => {
@@ -70,36 +83,6 @@ io.on('connection', (socket) => {
     }
     io.emit('new_group_message', message, userColors[socket.id]);
     console.log(`'${sender}#${socket.id.slice(0, 5)}' sent '${text}' with color '${userColors[socket.id]}'`);
-  });
-
-  socket.on('request_group_message', (user) => {
-    groupMessageQueue.addUser(user);
-    const message = groupMessageQueue.popMessage(user);
-    socket.emit('respond_with_group_message', message);
-    console.log(`'${user}' requested their next message.`);
-  });
-
-  // Client sends a message
-  socket.on('send_message', (message, sender, recipient) => {
-    // const cyphertext = CryptoJS.AES.encrypt(message, 'my key');
-    // const bytes = CryptoJS.AES.decrypt(cyphertext.toString(), 'my key');
-    // const plaintext = bytes.toString(CryptoJS.enc.Utf8);
-    messageQueue.addMessage(message, sender, recipient);
-    socket.emit('confirm_sent_message', new Message(message, sender, recipient));
-    console.log(`'${sender}' sent '${message}' to '${recipient}'`);
-    console.log(messageQueue.getAllMessages(recipient));
-  });
-
-  // Client requests all messages
-  socket.on('request_all_message', (recipient) => {
-    const messages = messageQueue.popAllMessages(recipient);
-    socket.emit('respond_with_message_array', messages);
-  });
-
-  // Client requests their next message
-  socket.on('request_message', (recipient) => {
-    const message = messageQueue.popMessage(recipient);
-    socket.emit('respond_with_message', message);
   });
 });
 
