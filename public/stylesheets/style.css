@@ -11,7 +11,7 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #3794f2;
   margin: auto;
-  width: 60%;
+  width: 85%;
 }
 a {
   text-decoration: none;
@@ -27,7 +27,7 @@ input {
 input:focus::-webkit-input-placeholder {
   opacity: 0;
 }
-ol {
+#flex-log > ol {
   padding: 0;
   list-style-type: none;
   transform: rotate(180deg);
@@ -35,17 +35,48 @@ ol {
 }
 .flexbox-container {
   display: flex;
-  flex-direction: column;
   flex: 1;
 }
 .flexbox-cell {
   flex: 1 1 auto;
+}
+#flex-webpage {
+  flex-direction: column;
+  flex-basis: auto;
 }
 #flex-header {
   flex: .8;
   padding-top: 20px;
   font-size: 1em;
   text-align: center;
+}
+#flex-app {
+  flex: 1
+  flex-direction: row;
+}
+#flex-userlist {
+  flex-basis: 20%;
+  max-width: 130px;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  margin-bottom: 20px;
+}
+#flex-userlist > ol {
+  text-decoration: none;
+  padding: 0;
+  list-style-type: none;
+}
+#flex-userlist > ol > li {
+  color: black;
+  background-color: #f5f5f5;
+  border-top-right-radius: 1em;
+  border-bottom-right-radius: 1em;
+  height: 2em;
+  margin-top: 1px;
+  cursor: pointer;
+}
+#flex-chat {
+  flex-direction: column;
 }
 #flex-login {
   flex: .6;
@@ -54,6 +85,7 @@ ol {
 #flex-login > h2 {
   color: #d30000;
   text-align: center;
+  cursor: pointer;
 }
 #flex-input {
   margin-top: 10px;
